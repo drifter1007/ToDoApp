@@ -18,9 +18,8 @@ class Todo(db.Model):
     description = db.Column(db.String(), nullable=False)
     #completed = db.Column(db.Boolean,nullable = False , default=False)
 
+
 # Creating repr for the  table 'todos'.
-
-
 def __repr__(self):
     return '<Todo: %s%s>', ('self.id', 'self.description')
 
@@ -28,10 +27,14 @@ def __repr__(self):
 # Creating controller for the  index page
 @app.route('/')
 def index():
-    return render_template('index.html', todos=[{
-        'description': 'Todo 1'
-    }, {
-        'description': 'Todo 2'
-    }, {
-        'description': 'Todo 3'
-    }])
+    return render_template('index.html', todos=Todo.query.all())
+
+
+# Creating controller for creating data or element in todos .
+@app.route('/todos/create', methods=['POST'])
+def create_todo():
+    description = request.form.get('description', ' ')
+    todo = Todo(description=description)
+    db.session.add(todo)
+    db.session.commit()
+    return redirect(url_for('index'))

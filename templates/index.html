@@ -2,18 +2,43 @@
 
 <head>
     <title>Learning Basic</title>
+    <!-- <link rel="stylesheet" type="text/css" href="./app.css"> -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.6/css/bootstrap.min.css"
+        integrity="sha384-rwoIResjU2yc3z8GV/NPeZWAv56rSmLldC3R/AZzGRnGxQQKnKkoFVhFQhNUwEyJ" crossorigin="anonymous">
+    <script src="https://code.jquery.com/jquery-3.1.1.slim.min.js"
+        integrity="sha384-A7FZj7v+d/sdmMqp/nOQwliLvUsJfDHW+k9Omg/a/EheAdgtzNs3hpfag6Ed950n"
+        crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/tether/1.4.0/js/tether.min.js"
+        integrity="sha384-DztdAPBWPRXSA/3eYEEUWrWCy7G5KFbe8fFjk5JAIxUYHKkDx6Qin1DkWx51bBrb"
+        crossorigin="anonymous"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.6/js/bootstrap.min.js"
+        integrity="sha384-vBWWzlZJ8ea9aCX4pEW3rVHjgjt7zpkNpZk+02D9phzyeVkE+jo0ieGizqPLForn"
+        crossorigin="anonymous"></script>
+    <style>
+        ul {
+            list-style: none;
+        }
+    </style>
 </head>
 
 <body>
     <h1>Learning Basic</h1>
     <ul>
-        <!-- looping every element in todos list in python app
-                and  creating a new list  for every  element  (description in todo table )
-        -->
+        <!-- Deploying View  for the creating todos in database   -->
+        <form id="form-todos" method="POST" action="/todos/create">
+            <input type="text" name="description" id="description" />
+            <input type="submit" value="Create">
+        </form>
+        <!-- looping every element in todos list in python app and  creating a new list  for every  element  (description in todo table ) in index route-->
         {% for todo in todos %}
         <li>{{ todo.description }}</li>
         {% endfor %}
     </ul>
+    <!-- <script>
+        document.getElementById('form-todos').onsubmit = function (e) {
+            e.preventDefault
+        }
+    </script> -->
 </body>
 
 </html>
