@@ -1,0 +1,19 @@
+<html>
+
+<head>
+    <title>Learning Basic</title>
+</head>
+
+<body>
+    <h1>Learning Basic</h1>
+    <ul>
+        <!-- looping every element in todos list in python app
+                and  creating a new list  for every  element  (description in todo table )
+        -->
+        {% for todo in todos %}
+        <li>{{ todo.description }}</li>
+        {% endfor %}
+    </ul>
+</body>
+
+</html>
