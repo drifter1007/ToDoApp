@@ -24,17 +24,24 @@ def __repr__(self):
     return '<Todo: %s%s>', ('self.id', 'self.description')
 
 
+# Controller  for MVC  model
+# Creating controller for creating data or element in todos .
+
+@app.route('/todos/create', methods=['POST'])
+def create_todo():
+    # Old traditional request methodss
+    #    description = request.form.get('description', ' ')
+    description = request.get_json()['description']
+    #                                            / |\ using dictionary which have key decription in it
+    todo = Todo(description=description)
+    db.session.add(todo)
+    db.session.commit()
+    # return redirect(url_for('index'))
+    return jsonify({
+        'description': todo.description
+    })
+
 # Creating controller for the  index page
 @app.route('/')
 def index():
     return render_template('index.html', todos=Todo.query.all())
-
-
-# Creating controller for creating data or element in todos .
-@app.route('/todos/create', methods=['POST'])
-def create_todo():
-    description = request.form.get('description', ' ')
-    todo = Todo(description=description)
-    db.session.add(todo)
-    db.session.commit()
-    return redirect(url_for('index'))
