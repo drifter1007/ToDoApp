@@ -46,24 +46,35 @@
     <h1>Learning Basic</h1>
 
     <!-- Deploying View  for the creating todos in database   -->
-    <form id="form-todos">
-        <input type="text" name="description" id="description" />
-        <input type="submit" value="Create">
-    </form>
+    <div class="list-wrapper">
+        <ul class="lists">
+            {% for list in lists %}
+            <li>
+                <a href="{{list.id}}">{{ list.name }}</a>
+            </li>
+            {% endfor %}
+        </ul>
+    </div>
+    <div class="todos-wrapper">
+        <form id="form-todos">
+            <input type="text" name="description" id="description" />
+            <input type="submit" value="Create">
+        </form>
 
-    <!-- Catching error for  fetch command -->
-    <div class="hidden" id="error">Something Went Wrong! </div>
+        <!-- Catching error for  fetch command -->
+        <div class="hidden" id="error">Something Went Wrong! </div>
 
-    <!-- looping every element in todos list in python app and  creating a new list  for every  element  (description in todo table ) in index route-->
-    <ul id="todos">
-        {% for todo in todos %}
-        <li>
-            <input class="check-completed" type="checkbox" data-id="{{todo.id}}" {% if todo.completed %} checked
-                {% endif %} />{{ todo.description }}
-            <button class="delete-todos" data-id="{{todo.id}}">&cross;</button>
-        </li>
-        {% endfor %}
-    </ul>
+        <!-- looping every element in todos list in python app and  creating a new list  for every  element  (description in todo table ) in index route-->
+        <ul id="todos">
+            {% for todo in todos %}
+            <li>
+                <input class="check-completed" type="checkbox" data-id="{{todo.id}}" {% if todo.completed %} checked
+                    {% endif %} />{{ todo.description }}
+                <button class="delete-todos" data-id="{{todo.id}}">&cross;</button>
+            </li>
+            {% endfor %}
+        </ul>
+    </div>
 
     <script>
         // Started using fetch reques instead of traditional form request

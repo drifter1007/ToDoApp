@@ -10,17 +10,30 @@ db = SQLAlchemy(app)
 migrate = Migrate(app, db)
 
 
+# Creating Table for todos items
 # Creating DataBase Table 'Todos'(Class) using sqlalchemy class Model Method
 class Todo(db.Model):
     __tablename__ = 'todos'
     id = db.Column(db.Integer, primary_key=True)
     description = db.Column(db.String(), nullable=False)
     completed = db.Column(db.Boolean, nullable=False, default=False)
+    list_id = db.Column(db.Integer, db.ForeignKey(
+        'todolists.id'), nullable=False)
 
 
 # Creating repr for the  table 'todos'.
 def __repr__(self):
     return '<Todo: %s%s>', ('self.id', 'self.description')
+
+
+# Adding one to many relationsip in database
+# Parent Table
+# Creating table for todos-list grouping todos by lists
+class TodoList(db.Model):
+    __tablename__ = 'todolists'
+    id = db.Column(db.Integer, primary_key=True)
+    name = db.Column(db.String(), nullable=False)
+    todos = db.relationship('Todo', backref='lists', lazy=True)
 
 
 # Controller  for MVC  model
@@ -52,7 +65,7 @@ def create_todo():
         db.session.add(todo)
         db.session.commit()
         body = {'description': todo.description}
-        #body['description'] = todo.description
+        # body['description'] = todo.description
     except:
         error = True
         db.session.rollback()
@@ -94,7 +107,12 @@ def delete_todo(todoID):
         db.session.close()
     return jsonify({'success': True})
 # ----------------------------------------------------------------------------------------------
+# Creating controller for showing lists with todos
+@app.route('/lists/<list_id>')
+def get_list_todo(list_id):
+    return render_template(
+        'index.html', lists=TodoList.query.all(), todos=Todo.query.filter_by(list_id=list_id).order_by('id').all())
 # Creating controller for the  index page
 @app.route('/')
 def index():
-    return render_template('index.html', todos=Todo.query.order_by('id').all())
+    return redirect(url_for('get_list_todo', list_id=1))
