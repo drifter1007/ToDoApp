@@ -48,14 +48,16 @@
         // Started using fetch reques instead of traditional form request
 
         // fetch post request for the description in todos
-        //const descInput = document.getElementById('description');
+
+        const descInput = document.getElementById('description');
         document.getElementById('form-todos').onsubmit = function (e) {
             e.preventDefault();
-            //const des = descInput.value;
+            const des = descInput.value;
+            descInput.value = " ";
             fetch('/todos/create', {
                 method: 'POST',
                 body: JSON.stringify({
-                    'description': document.getElementById('description').value,
+                    'description': des,
                 }),
                 headers: {
                     'Content-Type': 'application/json',
@@ -75,6 +77,7 @@
                     document.getElementById('error').className = ' ';
                 })
         }
+
     </script>
 </body>
 

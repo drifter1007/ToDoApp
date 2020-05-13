@@ -1,6 +1,5 @@
-from flask import Flask, render_template
-from flask import Flask, render_template, request, redirect, url_for, jsonify
-from os import sys, abort
+from flask import Flask, render_template, request, redirect, url_for, jsonify, abort
+import sys
 from flask_sqlalchemy import SQLAlchemy
 from flask_migrate import Migrate
 
@@ -16,7 +15,7 @@ class Todo(db.Model):
     __tablename__ = 'todos'
     id = db.Column(db.Integer, primary_key=True)
     description = db.Column(db.String(), nullable=False)
-    #completed = db.Column(db.Boolean,nullable = False , default=False)
+    # completed = db.Column(db.Boolean,nullable = False , default=False)
 
 
 # Creating repr for the  table 'todos'.
@@ -26,9 +25,10 @@ def __repr__(self):
 
 # Controller  for MVC  model
 # Creating controller for creating data or element in todos .
-
 @app.route('/todos/create', methods=['POST'])
 def create_todo():
+    """
+    # Normal way of using controller--------------------------------------------------------------------------------------------
     # Old traditional request methodss
     #    description = request.form.get('description', ' ')
     description = request.get_json()['description']
@@ -40,6 +40,31 @@ def create_todo():
     return jsonify({
         'description': todo.description
     })
+    # ---------------------------------------------------------------------------------------------------------------------------------
+    """
+    # USING SESSION IN CONTROLLERS ( try, except ,finally )
+    error = False
+    body = {}
+    try:
+        description = request.get_json()['description']
+        #                                       / |\ using dictionary which have key decription in it
+        todo = Todo(description=description)
+        db.session.add(todo)
+        db.session.commit()
+        body['description'] = todo.description
+    except:
+        error = True
+        db.session.rollback()
+        print(sys.exc_info())
+    finally:
+        db.session.close()
+    if error:
+        abort(400)
+    else:
+        # return jsonify({
+        # 'description': todo.description
+        # })
+        return jsonify(body)
 
 # Creating controller for the  index page
 @app.route('/')
