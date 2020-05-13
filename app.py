@@ -63,7 +63,7 @@ def create_todo():
         abort(400)
     else:
         return jsonify(body)
-
+# ------------------------------------------------------------------------------------------------
 # Creating  Controller for updating checkbox is checked or not
 @app.route('/todos/<todoID>/set-completed', methods=['POST'])
 def update_set_completed(todoID):
@@ -81,8 +81,19 @@ def update_set_completed(todoID):
         # 'description': todo.description
         # })
     return redirect(url_for('index'))
-
-
+# ---------------------------------------------------------------------------------------------
+# Creating controller for deleting todos in todos table
+@app.route('/todos/<todoID>', methods=['DELETE'])
+def delete_todo(todoID):
+    try:
+        Todo.query.filter_by(id=todoID).delete()
+        db.session.commit()
+    except:
+        db.session.rollback()
+    finally:
+        db.session.close()
+    return jsonify({'success': True})
+# ----------------------------------------------------------------------------------------------
 # Creating controller for the  index page
 @app.route('/')
 def index():
