@@ -51,7 +51,8 @@ def create_todo():
         todo = Todo(description=description)
         db.session.add(todo)
         db.session.commit()
-        body['description'] = todo.description
+        body = {'description': todo.description}
+        #body['description'] = todo.description
     except:
         error = True
         db.session.rollback()
@@ -61,12 +62,28 @@ def create_todo():
     if error:
         abort(400)
     else:
+        return jsonify(body)
+
+# Creating  Controller for updating checkbox is checked or not
+@app.route('/todos/<todoID>/set-completed', methods=['POST'])
+def update_set_completed(todoID):
+    try:
+        completed = request.get_json()['completed']
+        #                                       / |\ using dictionary which have key decription in it
+        todo = Todo.query.get(todoID)
+        todo.completed = completed
+        db.session.commit()
+    except:
+        db.session.rollback()
+    finally:
+        db.session.close()
         # return jsonify({
         # 'description': todo.description
         # })
-        return jsonify(body)
+    return redirect(url_for('index'))
+
 
 # Creating controller for the  index page
 @app.route('/')
 def index():
-    return render_template('index.html', todos=Todo.query.all())
+    return render_template('index.html', todos=Todo.query.order_by('id').all())
